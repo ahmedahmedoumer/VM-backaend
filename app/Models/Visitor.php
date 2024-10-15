@@ -33,9 +33,6 @@ class Visitor extends Model
         return $this->hasMany(Property::class, 'visitor_id'); // Assuming 'visitor_id' is the foreign key in the properties table
     }
     // Scope methods for status
-    public function scopeApproved($query) {
-        return $query->where('status', 'Approved');
-    }
 
     public function scopePending($query) {
         return $query->where('status', 'Pending');
@@ -65,5 +62,10 @@ class Visitor extends Model
     public function visitorLogs()
     {
         return $this->hasMany(VisitorLog::class, 'visitor_id');
+    }
+
+     // Scope methods can be added here as needed
+     public function scopeApproved($query) {
+        return $query->where('status', 'Approved');
     }
 }

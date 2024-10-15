@@ -109,7 +109,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     // Route to assign a role to a use
 // });
 
-Route::post('/checkin', [VisitorLogController::class, 'checkIn']);
+Route::post('/checkin/{id}', [VisitorLogController::class, 'checkIn']);
 Route::post('/checkout/{id}', [VisitorLogController::class, 'checkOut']);
 Route::get('/visitor-logs', [VisitorLogController::class, 'index']);
 Route::get('/visitor-logs/{id}', [VisitorLogController::class, 'show']);

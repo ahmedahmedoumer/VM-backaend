@@ -104,17 +104,4 @@ class VisitorController extends Controller
         $visitor->save();
         return response()->json($visitor);
     }
-
-    // Scope methods can be added here as needed
-    public function scopeApproved($query) {
-        return $query->where('status', 'Approved');
-    }
-
-    public function scopePending($query) {
-        return $query->where('status', 'Pending');
-    }
-
-    public function scopeRejected($query) {
-        return $query->where('status', 'Rejected');
-    }
 }

@@ -18,6 +18,7 @@ class Property extends Model
         'id',            // UUID primary key
         'visitor_id',    // Foreign key referencing a visitor
         'property_name', // Name of the property
+        'property_status',
         'property_type', // Type of property (e.g., Tool, Equipment)
         'description',   // Optional description of the property
         'quantity',      // Quantity of the property, default is 1

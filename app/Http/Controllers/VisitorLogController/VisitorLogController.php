@@ -18,38 +18,50 @@ class VisitorLogController extends Controller
         $this->propertyService = $propertyService; // Inject the service
     }
 
-    public function checkIn(Request $request)
+    public function checkIn(Request $request,$id)
     {
-        $request->validate([
-            'visitor_id' => 'required|uuid|exists:visitors,id',
-        ]);
-
+        // $request->validate([
+        //     'visitor_id' => 'required|uuid|exists:visitors,id',
+        // ]);
         $visitorLog = VisitorLog::create([
-            'visitor_id' => $request->visitor_id,
+            'visitor_id' => $id,
             'checkin_time' => now(),
             'isAvailable' => true,
         ]);
-
+    
+        // Retrieve the properties from the request
+        $properties = $request->input('properties');
+    
+        // Loop through each property and create it using the PropertyService
+        foreach ($properties as $propertyData) {
+            $this->propertyService->createProperty(array_merge($propertyData, ['visitor_id' => $id]));
+        }
+    
         return response()->json($visitorLog, 201);
     }
 
-    public function checkOut(Request $request, $id)
+    public function checkOut(Request $request)
     {
-        // Find the visitor log by ID
-        $visitorLog = VisitorLog::findOrFail($id);
-
-        // Update the checkout time and availability status
-        $visitorLog->checkout_time = now();
-        $visitorLog->isAvailable = false;
-        $visitorLog->save();
-
+        // Validate the request to ensure it has the required visitor_id
+        $request->validate([
+            'visitor_id' => 'required|uuid', // Ensure the visitor ID is valid
+            'property_ids' => 'array' // Optional: Validate property_ids as an array
+        ]);
+    
+        // Create a new visitor log
+        $visitorLog = VisitorLog::create([
+            'visitor_id' => $request->input('visitor_id'), // Get visitor ID from the request
+            'checkout_time' => now(),
+            'isAvailable' => false, // Mark as not available on checkout
+        ]);
+    
         $propertyIds = $request->input('property_ids'); // Get property IDs from the request
         if ($propertyIds) {
             // Call the updatePropertyStatus method from the service
-            $this->propertyService->updatePropertyStatus($propertyIds, false); // Assuming you want to set status to false on checkout
+            $this->propertyService->updatePropertyStatus($propertyIds, false); // Update the property status as needed
         }
-
-        return response()->json($visitorLog);
+    
+        return response()->json($visitorLog, 201); // Return the created log with a 201 status code
     }
 
     public function index(Request $request)

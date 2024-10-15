@@ -18,7 +18,7 @@ class CreatePropertiesTable extends Migration
             $table->uuid('visitor_id')->nullable(); // Use UUID instead of foreignId
 
             $table->string('property_name');
-            $table->string('property_type');
+            $table->string('property_type')->nullable();
             $table->string('property_status');
             $table->text('description')->nullable();
             $table->integer('quantity')->default(1);
